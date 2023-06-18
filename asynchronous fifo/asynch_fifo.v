@@ -1,22 +1,9 @@
 
 
-module asynch_fifo(
-	areset_n, 
-
-	wr_clk, 
- 	datain, 
-	write,
-
-	rd_clk,
-	read, 
-	q,
-
-	empty,
-	full
-);
+module asynch_fifo(areset_n,wr_clk,datain,write,rd_clk,read,q,empty,full);
+	
 parameter DWIDTH=8;
 parameter AWIDTH=6;
-
 
 input wr_clk;
 input areset_n;
