@@ -9,7 +9,7 @@
 #include <verilated.h>
 
 // Include model header, generated from Verilating "top.v"
-#include "Vfifo.h"
+#include "Vtop.h"
 
 // Current simulation time (64-bit unsigned)
 vluint64_t main_time = 0;
@@ -43,33 +43,33 @@ int main(int argc, char** argv, char** env) {
     Verilated::mkdir("logs");
 
     // Construct the Verilated model, from Vtop.h generated from Verilating "top.v"
-    Vfifo* fifo = new Vfifo;  // Or use a const unique_ptr, or the VL_UNIQUE_PTR wrapper
+    Vtop* top = new Vtop;  // Or use a const unique_ptr, or the VL_UNIQUE_PTR wrapper
 
     // Set some inputs
-    fifo->clk = 0;
-    fifo->rst = 0;
+    top->clk = 0;
+    top->rstn = 0;
 //     top->in_small = 1;
 //     top->in_quad = 0x1234;
 //     top->in_wide[0] = 0x11111111;
 //     top->in_wide[1] = 0x22222222;
 //     top->in_wide[2] = 0x3;
 
-    fifo->eval();
+    top->eval();
     main_time++;  // Time passes...
 
-    fifo->rst = 1;
+    top->rstn = 1;
 
-    fifo->eval();
+    top->eval();
     main_time++;  // Time passes...
 
-    fifo->rst = 0;
+    top->rstn = 0;
 
-    fifo->eval();
+    top->eval();
     main_time++;  // Time passes...
 
-    fifo->rst = 1;
+    top->rstn = 1;
 
-    fifo->eval();
+    top->eval();
     main_time++;  // Time passes...
 
     // Simulate until $finish
@@ -77,7 +77,7 @@ int main(int argc, char** argv, char** env) {
         main_time++;  // Time passes...
 
         // Toggle a fast (time/2 period) clock
-        fifo->clk = !fifo->clk;
+        top->clk = !top->clk;
 
         // Toggle control signals on an edge that doesn't correspond
         // to where the controls are sampled; in this example we do
@@ -97,7 +97,7 @@ int main(int argc, char** argv, char** env) {
         // (If you have multiple models being simulated in the same
         // timestep then instead of eval(), call eval_step() on each, then
         // eval_end_step() on each.)
-        fifo->eval();
+        top->eval();
 
         // Read outputs
 //         VL_PRINTF("[%" VL_PRI64 "d] clk=%x rstl=%x iquad=%" VL_PRI64 "x"
@@ -107,7 +107,7 @@ int main(int argc, char** argv, char** env) {
     }
 
     // Final model cleanup
-    fifo->final();
+    top->final();
 
     //  Coverage analysis (since test passed)
 #if VM_COVERAGE
@@ -116,8 +116,8 @@ int main(int argc, char** argv, char** env) {
 #endif
 
     // Destroy model
-    delete fifo;
-    fifo = NULL;
+    delete top;
+    top = NULL;
 
     // Fin
     exit(0);

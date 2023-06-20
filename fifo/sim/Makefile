@@ -41,7 +41,7 @@ VERILATOR_FLAGS += -cc --exe
 # Generate makefile dependencies (not shown as complicates the Makefile)
 #VERILATOR_FLAGS += -MMD
 # Optimize
-VERILATOR_FLAGS += -x-assign 0
+VERILATOR_FLAGS += -Os -x-assign 0
 # Warn abount lint issues; may not want this on less solid designs
 VERILATOR_FLAGS += -Wall
 VERILATOR_FLAGS += -Wno-lint
@@ -60,7 +60,7 @@ VERILATOR_FLAGS += --trace
 #VERILATOR_FLAGS += --gdbbt
 
 VERILATOR_FLAGS += +librescan +libext+.v+.sv+.vh+.svh
-VERILATOR_FLAGS += --top-module fifo
+VERILATOR_FLAGS += --top-module top
 
 # Input files for Verilator
 VERILATOR_INPUT = -f filelist.f sim_main.cpp
@@ -98,7 +98,7 @@ run:
 	@echo "-- RUN ---------------------"
 	@rm -rf logs
 	@mkdir -p logs
-	obj_dir/Vfifo +trace
+	obj_dir/Vtop +trace
 ### TO NOT dump a VCD user
 # 	obj_dir/Vtop
 

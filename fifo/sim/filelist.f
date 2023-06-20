@@ -2,6 +2,6 @@
 
 
 -y .
-fifo.v
+../rtl/fifo.v
 fifo_tb.v
 
