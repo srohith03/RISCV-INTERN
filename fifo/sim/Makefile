@@ -27,8 +27,8 @@ endif
 # package install, and verilator is in your path. Otherwise find the
 # binary relative to $VERILATOR_ROOT (such as when inside the git sources).
 ifeq ($(VERILATOR_ROOT),)
-VERILATOR = /home/yoda/install_dir/verilator_updated/bin/verilator
-VERILATOR_COVERAGE = /home/yoda/install_dir/verilator_updated/bin/verilator_coverage
+VERILATOR = verilator
+VERILATOR_COVERAGE = verilator_coverage
 else
 export VERILATOR_ROOT
 VERILATOR = $(VERILATOR_ROOT)/bin/verilator
