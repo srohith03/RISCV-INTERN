@@ -7,7 +7,21 @@ end
 
 module top (
     input clk ,
-    input rst );
+    input rstn );
+
+    // Print some stuff as an example
+    // the following enables dumping to vcd
+    initial begin
+        if ($test$plusargs("trace") != 0) begin
+            $display("[%0t] Tracing to logs/vlt_dump.vcd...\n", $time);
+            $dumpfile("logs/vlt_dump.vcd");
+            $dumpvars();
+        end
+        $display("[%0t] Model running...\n", $time);
+    end
+
+    //////////////////////////////////////////////////////
+    wire rst = !rstn ;
 
     reg rd;
     reg wr;

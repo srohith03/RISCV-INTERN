@@ -27,8 +27,8 @@ endif
 # package install, and verilator is in your path. Otherwise find the
 # binary relative to $VERILATOR_ROOT (such as when inside the git sources).
 ifeq ($(VERILATOR_ROOT),)
-VERILATOR = verilator
-VERILATOR_COVERAGE = verilator_coverage
+VERILATOR = /home/yoda/install_dir/verilator_updated/bin/verilator
+VERILATOR_COVERAGE = /home/yoda/install_dir/verilator_updated/bin/verilator_coverage
 else
 export VERILATOR_ROOT
 VERILATOR = $(VERILATOR_ROOT)/bin/verilator
@@ -37,11 +37,12 @@ endif
 
 VERILATOR_FLAGS =
 # Generate C++ in executable form
-VERILATOR_FLAGS += -cc --exe
+VERILATOR_FLAGS += -cc --exe --timing
 # Generate makefile dependencies (not shown as complicates the Makefile)
 #VERILATOR_FLAGS += -MMD
 # Optimize
-VERILATOR_FLAGS += -Os -x-assign 0
+# VERILATOR_FLAGS += -Os -x-assign 0
+VERILATOR_FLAGS += -x-assign 0
 # Warn abount lint issues; may not want this on less solid designs
 VERILATOR_FLAGS += -Wall
 VERILATOR_FLAGS += -Wno-lint
@@ -89,9 +90,9 @@ compile:
 # To compile, we can either
 # 1. Pass --build to Verilator by editing VERILATOR_FLAGS above.
 # 2. Or, run the make rules Verilator does:
-#	$(MAKE) -j -C obj_dir -f Vtop.mk
+	$(MAKE) -j -C obj_dir -f Vtop.mk
 # 3. Or, call a submakefile where we can override the rules ourselves:
-	$(MAKE) -j -C obj_dir -f ../Makefile_obj
+# 	$(MAKE) -j -C obj_dir -f ../Makefile_obj
 
 run:
 	@echo
