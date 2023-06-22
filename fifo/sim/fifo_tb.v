@@ -1,3 +1,7 @@
+parameter WIDTH = 3;
+parameter DEPTH = (1 << WIDTH);
+
+
 `define clock_delay(CYCLES) \
 for (integer  i = 0; i < CYCLES; i = i + 1) begin \
 @(posedge clk); \
@@ -9,8 +13,10 @@ module top (
     input clk ,
     input rstn );
 
-    // Print some stuff as an example
-    // the following enables dumping to vcd
+   
+
+
+    
     initial begin
         if ($test$plusargs("trace") != 0) begin
             $display("[%0t] Tracing to logs/vlt_dump.vcd...\n", $time);
@@ -20,17 +26,21 @@ module top (
         $display("[%0t] Model running...\n", $time);
     end
 
-    //////////////////////////////////////////////////////
+    
     wire rst = !rstn ;
 
     reg rd;
     reg wr;
-    reg [7:0] data_in;
+    reg [DEPTH-1:0] data_in;
 
     wire empty;
     wire full;
-    wire [3:0] fifo_cnt;
-    wire [7:0] data_out;
+    wire [WIDTH:0] fifo_cnt;
+    wire [DEPTH-1:0] data_out;
+
+     reg [DEPTH-1:0] verif_data_q[$];
+  reg [DEPTH-1:0] verif_data_in;
+
 
     fifo dut (
         .data_in(data_in),
@@ -44,61 +54,43 @@ module top (
         .data_out(data_out)
     );
 
-    // initial begin
-    //     clk = 0;
-    //     forever #5 clk = ~clk;
-    // end
-
     initial begin
-        rd = 0;
-        wr = 0;
-        data_in = 8'b0;
+    wr = 0;
+    rd = 0;
+    data_in = 0;
 
-        `clock_delay(10)
+    for (int iter=0; iter<2; iter++) begin
+      for (int i=0; i<32; i++) begin
+        @(posedge clk)
 
-        // Write data into the FIFO
-        wr = 1;
-        data_in = 8'd42;  // decimal value: 42
-        `clock_delay(20)
-        wr = 0;
+         if (!full) begin
+        wr = (i%2 == 0)? 1'b1 : 1'b0;
+        if (wr) begin
+          data_in = $urandom;
+          verif_data_q.push_front(data_in);
+        end
+      end
 
-        // Read data from the FIFO
-        rd = 1;
-        `clock_delay(10)
-        rd = 0;
+      if(!empty) begin
+        rd = (i%4 == 0) ? 1 : 0;
+        if (rd) begin
+            verif_data_in = verif_data_q.pop_back();
+            $display("Checking rdata: expected wdata = %h, rdata = %h", verif_data_in, data_out);
+          assert(data_out === verif_data_in) else $error("Checking failed: expected wdata = %h, rdata = %h", verif_data_in, data_out);
 
-        // Perform more read and write operations
-        // Write data 1
-        wr = 1;
-        data_in = 8'd30;  // decimal value: 30
-        `clock_delay(15)
-        wr = 0;
+        end
 
-        // Write data 2
-        wr = 1;
-        data_in = 8'd55;  // decimal value: 55
-        `clock_delay(10)
-        wr = 0;
-
-        // Read data from the FIFO
-        rd = 1;
-        `clock_delay(5)
-
-
-        rd = 0;
-
-        // Write data 3
-        wr = 1;
-        data_in = 8'd87;  // decimal value: 87
-        `clock_delay(25)
-        wr = 0;
-
-        // Read data from the FIFO
-        rd = 1;
-        `clock_delay(15)
-        rd = 0;
-
-        $finish;
+      end
     end
+  end
+
+  
+
+    $finish;
+  end
 
 endmodule
+
+
+
+
