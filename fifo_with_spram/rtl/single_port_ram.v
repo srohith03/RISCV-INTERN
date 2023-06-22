@@ -12,10 +12,10 @@ module single_port_ram (
 );
     parameter num = 32'b1 << `WIDTH;
     reg [31:0] ram[num-1:0];
-    integer i;
+    
     always @(posedge clk) begin
         if (rst) begin
-            for (i = 0; i < num; i = i + 1) begin
+            for (int i = 0; i < num; i = i + 1) begin
                 ram[i] <= 32'b0;
             end
             dout <= 32'b0;
