@@ -1,14 +1,35 @@
-module asynch_fifo_tb;
+ parameter DSIZE = 8;
+ parameter ASIZE = 3;
 
-    parameter DSIZE = 8;
-    parameter ASIZE = 6;
+
+
+module top(
+    input i_wclk,
+    input i_rclk,
+    input rstn
+);
+
+
+ 
+    initial begin
+        if ($test$plusargs("trace") != 0) begin
+            $display("[%0t] Tracing to logs/vlt_dump.vcd...\n", $time);
+            $dumpfile("logs/vlt_dump.vcd");
+            $dumpvars();
+        end
+        $display("[%0t] Model running...\n", $time);
+    end
+
+    wire i_wrst_n = !rstn;
+    wire i_rrst_n = !rstn; 
+   
 
     wire [DSIZE-1:0] o_rdata;
     wire o_wfull;
     wire o_rempty;
     reg [DSIZE-1:0] i_wdata;
-    reg i_wr, i_wclk, i_wrst_n;
-    reg i_rd, i_rclk, i_rrst_n;
+    reg i_wr;
+    reg i_rd;
 
     // Model a queue for checking data
     reg [DSIZE-1:0] verif_data_q  [$];
@@ -18,22 +39,12 @@ module asynch_fifo_tb;
     // Instantiate the FIFO
     asynch_fifo #(DSIZE, ASIZE) dut (.*);
 
-    initial begin
-        i_wclk = 1'b0;
-        i_rclk = 1'b0;
-
-        fork
-            forever #10ns i_wclk = ~i_wclk;
-            forever #15ns i_rclk = ~i_rclk;
-        join
-    end
+   
 
     initial begin
         i_wr = 1'b0;
         i_wdata = '0;
-        i_wrst_n = 1'b0;
-        repeat (5) @(posedge i_wclk);
-        i_wrst_n = 1'b1;
+        
 
         for (int iter = 0; iter < 2; iter++) begin
             for (int i = 0; i < 32; i++) begin
@@ -54,9 +65,7 @@ module asynch_fifo_tb;
     initial begin
         i_rd = 1'b0;
 
-        i_rrst_n = 1'b0;
-        repeat (8) @(posedge i_rclk);
-        i_rrst_n = 1'b1;
+       
 
         for (int iter = 0; iter < 2; iter++) begin
             for (int i = 0; i < 32; i++) begin

@@ -11,7 +11,7 @@ module asynch_fifo (
     output wire o_rempty
 );
     parameter DSIZE = 8;
-    parameter ASIZE = 6;
+    parameter ASIZE = 3;
     localparam DW = DSIZE;
     localparam AW = ASIZE;
 
@@ -56,9 +56,9 @@ module asynch_fifo (
         else o_wfull <= wfull_next;
 
 
-    always @(posedge i_wclk) if ((i_wr) && (!o_wfull)) mem[waddr] <= i_wdata;
+    // always @(posedge i_wclk) if ((i_wr) && (!o_wfull)) mem[waddr] <= i_wdata;
 
-
+    
 
 
     initial {rq2_wgray, rq1_wgray} = 0;
@@ -91,6 +91,24 @@ module asynch_fifo (
         else o_rempty <= rempty_next;
 
 
-    assign o_rdata = mem[raddr];
+    // assign o_rdata = mem[raddr];
+
+
+    dpram dp(
+
+    .wr_addr(waddr),
+    .wr_data(i_wdata),
+    .wr_en(i_wr),
+    .rd_addr(raddr),
+    .rd_data(o_rdata),
+    .rd_en(i_rd),
+    .o_wfull(o_wfull),
+    .o_rempty(o_rempty),
+    .wclk(i_wclk),
+    .rclk(i_rclk)
+
+);
 
 endmodule
+
+
