@@ -1,4 +1,5 @@
-`define WIDTH 8'd3
+`define WIDTH 3
+`define DATA_WIDTH 8
 
 module mem_ctr (
     input clk,
@@ -7,17 +8,17 @@ module mem_ctr (
     input RE_N,
     input [`WIDTH-1:0] R_ADR,
     input [`WIDTH-1:0] W_ADR,
-    input [31:0] DI,
+    input [`DATA_WIDTH-1:0] DI,
     //----------single port ram_0 signal----------//
     output ENABLE_0,
     output WE_0,
     output [`WIDTH-2:0] A_0,
-    output [31:0] DI_0,
+    output [`DATA_WIDTH-1:0] DI_0,
     //----------single port ram_0 signal----------//
     output ENABLE_1,
     output WE_1,
     output [`WIDTH-2:0] A_1,
-    output [31:0] DI_1
+    output [`DATA_WIDTH-1:0] DI_1
 );
     wire R_bit, W_bit;
     wire [`WIDTH-2:0] R_A;
@@ -27,7 +28,7 @@ module mem_ctr (
     //--- write signal  register --------//
     reg W_bit_D;
     reg [`WIDTH-2:0] W_A_D;
-    reg [31:0] DI_D;
+    reg [`DATA_WIDTH-1:0] DI_D;
     reg flag;
     //----------------------------------//
     assign {R_A, R_bit} = R_ADR;
@@ -41,8 +42,8 @@ module mem_ctr (
         if (rst) begin
 
             W_bit_D <= 1'b0;
-            W_A_D <= 31'b0;
-            DI_D <= 31'b0;
+            W_A_D <= 0;
+            DI_D <= 0;
             flag <= 1'b0;
         end else if (CONFLICT) begin
             W_bit_D <= W_bit ;

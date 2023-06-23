@@ -3,6 +3,9 @@ for (integer  i = 0; i < CYCLES; i = i + 1) begin \
 @(posedge clk); \
 end
 
+`define WIDTH 3
+`define DATA_WIDTH 8
+
 
 module top(
    input clk,
@@ -23,24 +26,24 @@ module top(
     wire rst = !rstn ;
    
    
-    reg [31:0]  DI;
+    reg [`DATA_WIDTH-1:0]  DI;
     reg RE;
     reg WE;
-    wire [31:0]  DO;
-    wire [33:0]  inst;
+    wire [`DATA_WIDTH-1:0]  DO;
+    wire [`DATA_WIDTH+1:0]  inst;
     wire full;
     wire empty;
 
 
-    reg [31:0] verif_data_q[$];
-  reg [31:0] verif_DI;
+    reg [`DATA_WIDTH-1:0] verif_data_q[$];
+  reg [`DATA_WIDTH-1:0] verif_DI;
 
 
 
    
       initial begin
-    WE = 1'b0;
-    DI = 32'b0;
+    WE = 0;
+    DI = 0;
     
 
     for (int iter=0; iter<2; iter++) begin
@@ -58,7 +61,7 @@ module top(
   end
 
   initial begin
-    RE = 1'b0;
+    RE = 0;
 
     
 

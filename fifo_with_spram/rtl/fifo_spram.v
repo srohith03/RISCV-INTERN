@@ -1,12 +1,13 @@
-`define WIDTH 8'd3
+`define WIDTH 3
+`define DATA_WIDTH 8 
 
 module fifo (
-    input [31:0] DI,
+    input [`DATA_WIDTH-1:0] DI,
     input RE,
     input WE,
     input clk,
     input rst,
-    output [31:0] DO,
+    output [`DATA_WIDTH-1:0] DO,
     output read_valid,
     output r_err,
     output w_err
@@ -16,7 +17,7 @@ module fifo (
     wire re_n;
     wire [`WIDTH-1:0] r_adr;
     wire [`WIDTH-1:0] w_adr;
-    wire [31:0] d_out;
+    wire [`DATA_WIDTH-1:0] d_out;
     wire read_valid_0, read_valid_1;
 
     request_update update_addr (
@@ -37,10 +38,10 @@ module fifo (
     wire ENABLE_0, ENABLE_1;
     wire WE_0, WE_1;
     wire [`WIDTH-2:0] A_0;
-    wire    [31:0] DI_0;
+    wire    [`DATA_WIDTH-1:0] DI_0;
     wire [`WIDTH-2:0] A_1;
-    wire    [31:0] DI_1;
-    wire [31:0] RAM_0_out, RAM_1_out;
+    wire    [`DATA_WIDTH-1:0] DI_1;
+    wire [`DATA_WIDTH-1:0] RAM_0_out, RAM_1_out;
 
     mem_ctr mem_ctr_1 (
         .clk (clk),

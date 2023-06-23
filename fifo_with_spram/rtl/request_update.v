@@ -1,7 +1,8 @@
-`define WIDTH 8'd3
+`define WIDTH 3
+`define DATA_WIDTH 8
 
 module request_update (
-    input [31:0] di,
+    input [`DATA_WIDTH-1:0] di,
     input re,
     input we,
     input clk,
@@ -12,7 +13,7 @@ module request_update (
     output [`WIDTH-1:0] w_adr,
     output r_err,
     output w_err,
-    output [31:0] data_out
+    output [`DATA_WIDTH-1:0] data_out
 );
 
     wire full, empty;

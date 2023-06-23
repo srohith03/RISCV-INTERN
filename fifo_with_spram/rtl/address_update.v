@@ -1,4 +1,5 @@
-`define WIDTH 8'd3
+`define WIDTH 3
+`define DATA_WIDTH 8
 
 
 module address_update (
@@ -20,7 +21,7 @@ module address_update (
 
     always @(posedge clk) begin
         if (rst) begin
-            rd_addr <= 4'b0;
+            rd_addr <= 0;
 
         end else if (re & ~empty) begin
             rd_addr <= rd_addr + 1'b1;
@@ -32,7 +33,7 @@ module address_update (
 
     always @(posedge clk) begin
         if (rst) begin
-            wr_addr <= 4'b0;
+            wr_addr <= 0;
 
         end else if ((we & ~full) | (we & re & full)) begin
             wr_addr <= wr_addr + 1'b1;

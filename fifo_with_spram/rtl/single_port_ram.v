@@ -1,24 +1,25 @@
-`define WIDTH 8'd3
+`define WIDTH 3
+`define DATA_WIDTH 8
 
 module single_port_ram (
     input clk,
     input rst,
     input ena,
     input wea,
-    input [31:0] din,
+    input [`DATA_WIDTH-1:0] din,
     input [`WIDTH-2:0] addr,
-    output reg [31:0] dout,
+    output reg [`DATA_WIDTH-1:0] dout,
     output reg read_valid
 );
-    parameter num = 32'b1 << `WIDTH;
-    reg [31:0] ram[num-1:0];
+    parameter num = 1 << `WIDTH;
+    reg [`DATA_WIDTH-1:0] ram[num-1:0];
     
     always @(posedge clk) begin
         if (rst) begin
             for (int i = 0; i < num; i = i + 1) begin
-                ram[i] <= 32'b0;
+                ram[i] = 0;
             end
-            dout <= 32'b0;
+            dout <= 0;
             read_valid <= 1'b0;
         end else if (ena && wea) begin
             ram[addr]  <= din;
