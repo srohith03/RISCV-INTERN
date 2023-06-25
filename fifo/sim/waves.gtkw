@@ -1,0 +1,19 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Jun 25 05:58:07 2023
+[*]
+[dumpfile] "/home/rohith/Desktop/projects/RISCV-INTERN/fifo/sim/logs/vlt_dump.vcd"
+[dumpfile_mtime] "Sun Jun 25 05:57:59 2023"
+[dumpfile_size] 6742
+[savefile] "/home/rohith/Desktop/projects/RISCV-INTERN/fifo/sim/waves.gtkw"
+[timestart] 0
+[size] 1846 1016
+[pos] -89 -89
+*-5.375367 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[sst_width] 233
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 289
+[pattern_trace] 1
+[pattern_trace] 0

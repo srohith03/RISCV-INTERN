@@ -1,15 +1,12 @@
-parameter WIDTH = 3;
-parameter DEPTH = (1 << WIDTH);
 
+module top # (
 
-`define clock_delay(CYCLES) \
-for (integer  i = 0; i < CYCLES; i = i + 1) begin \
-@(posedge clk); \
-end
+    parameter ADDR_WIDTH  = 5,
+    parameter DATA_WIDTH  = 2,
+    parameter DEPTH       = 16
 
-
-
-module top (
+)
+(
     input clk ,
     input rstn );
 
@@ -31,15 +28,14 @@ module top (
 
     reg rd;
     reg wr;
-    reg [DEPTH-1:0] data_in;
+    reg [DATA_WIDTH-1:0] data_in;
 
     wire empty;
     wire full;
-    wire [WIDTH:0] fifo_cnt;
-    wire [DEPTH-1:0] data_out;
+    wire [DATA_WIDTH-1:0] data_out;
 
-     reg [DEPTH-1:0] verif_data_q[$];
-  reg [DEPTH-1:0] verif_data_in;
+     reg [DATA_WIDTH-1:0] verif_data_q[$];
+  reg [DATA_WIDTH-1:0] verif_data_in;
 
 
     fifo dut (
@@ -50,7 +46,6 @@ module top (
         .wr(wr),
         .empty(empty),
         .full(full),
-        .fifo_cnt(fifo_cnt),
         .data_out(data_out)
     );
 
@@ -70,9 +65,13 @@ module top (
           verif_data_q.push_front(data_in);
         end
       end
+      if(full) begin
+        wr = 0;
+      end
+
 
       if(!empty) begin
-        rd = (i%4 == 0) ? 1 : 0;
+        rd = (i%8 == 0) ? 1 : 0;
         if (rd) begin
             verif_data_in = verif_data_q.pop_back();
             $display("Checking rdata: expected wdata = %h, rdata = %h", verif_data_in, data_out);
@@ -90,6 +89,8 @@ module top (
   end
 
 endmodule
+
+
 
 
 

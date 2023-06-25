@@ -1,6 +1,7 @@
 module dpram # (
-    parameter integer DATA_WIDTH = 32 ,
-    parameter integer ADDR_WIDTH = 12
+    parameter  DATA_WIDTH = 2,
+    parameter  ADDR_WIDTH = 5,
+    parameter DEPTH       = 16
 ) (
     input [ADDR_WIDTH-1:0] wr_addr ,
     input [DATA_WIDTH-1:0] wr_data ,
@@ -13,7 +14,7 @@ module dpram # (
     input clk
 );
 
-reg [DATA_WIDTH-1:0] mem [(2**ADDR_WIDTH) -1 :0] ;
+reg [DATA_WIDTH-1:0] mem [(DEPTH -1) :0] ;
 
 always @ ( posedge clk ) begin
     if ( wr_en ) begin

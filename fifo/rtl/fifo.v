@@ -1,7 +1,11 @@
 
+module fifo # (
 
-
-module fifo (
+    parameter ADDR_WIDTH  = 5,
+    parameter DATA_WIDTH  = 2,
+    parameter DEPTH       = 16
+)
+(
     input reg [DATA_WIDTH-1:0] data_in,
     input clk,
     rst,
@@ -9,19 +13,13 @@ module fifo (
     wr,
     output empty,
     full,
-    output reg [ADDR_WIDTH:0] fifo_cnt,
     output reg [DATA_WIDTH-1:0] data_out
 );
 
-parameter ADDR_WIDTH = 12;
-parameter DATA_WIDTH = 32;
-
-    
     reg [ADDR_WIDTH-1:0] rd_ptr, wr_ptr;
 
-    assign empty = (fifo_cnt == 0);
-    assign full  = (fifo_cnt == DATA_WIDTH);
-
+    assign empty = (wr_ptr == rd_ptr);
+   assign full  = (wr_ptr == {~rd_ptr[ADDR_WIDTH-1], rd_ptr[ADDR_WIDTH-2:0]});
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin
@@ -33,22 +31,6 @@ parameter DATA_WIDTH = 32;
             rd_ptr <= ((rd && !empty) || (wr && rd)) ? rd_ptr + 1 : rd_ptr;
         end
     end
-
-    always @(posedge clk or posedge rst) begin
-        if (rst) fifo_cnt <= 0;
-        else begin
-            case ({
-                wr, rd
-            })
-                2'b00: fifo_cnt <= fifo_cnt;
-                2'b01: fifo_cnt <= (fifo_cnt == 0) ? 0 : fifo_cnt - 1;
-                2'b10: fifo_cnt <= (fifo_cnt == DATA_WIDTH) ? DATA_WIDTH : fifo_cnt + 1;
-                2'b11: fifo_cnt <= fifo_cnt;
-                default fifo_cnt <= fifo_cnt;
-            endcase
-        end
-    end
-
 
 
  dpram dp(
@@ -62,6 +44,8 @@ parameter DATA_WIDTH = 32;
     .clk(clk)
 
 );
+
+
 
 endmodule
 
