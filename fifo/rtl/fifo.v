@@ -1,9 +1,8 @@
 
 module fifo # (
 
-    parameter ADDR_WIDTH  = 5,
-    parameter DATA_WIDTH  = 2,
-    parameter DEPTH       = 16
+    parameter ADDR_WIDTH  = 4,
+    parameter DATA_WIDTH  = 2
 )
 (
     input reg [DATA_WIDTH-1:0] data_in,
@@ -16,10 +15,10 @@ module fifo # (
     output reg [DATA_WIDTH-1:0] data_out
 );
 
-    reg [ADDR_WIDTH-1:0] rd_ptr, wr_ptr;
+    reg [ADDR_WIDTH:0] rd_ptr, wr_ptr;
 
     assign empty = (wr_ptr == rd_ptr);
-   assign full  = (wr_ptr == {~rd_ptr[ADDR_WIDTH-1], rd_ptr[ADDR_WIDTH-2:0]});
+   assign full  = (wr_ptr == {~rd_ptr[ADDR_WIDTH], rd_ptr[ADDR_WIDTH-1:0]});
 
     always @(posedge clk or posedge rst) begin
         if (rst) begin

@@ -1,9 +1,8 @@
 
 module top # (
 
-    parameter ADDR_WIDTH  = 5,
-    parameter DATA_WIDTH  = 2,
-    parameter DEPTH       = 16
+    parameter ADDR_WIDTH  = 4,
+    parameter DATA_WIDTH  = 2
 
 )
 (
@@ -53,6 +52,7 @@ module top # (
     wr = 0;
     rd = 0;
     data_in = 0;
+    
 
     for (int iter=0; iter<2; iter++) begin
       for (int i=0; i<32; i++) begin
@@ -65,10 +65,7 @@ module top # (
           verif_data_q.push_front(data_in);
         end
       end
-      if(full) begin
-        wr = 0;
-      end
-
+     
 
       if(!empty) begin
         rd = (i%8 == 0) ? 1 : 0;
