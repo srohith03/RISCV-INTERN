@@ -3,7 +3,7 @@
 
 -y .
 ../rtl/asynch_fifo.v
-../rtl/dpram.v
+../rtl/fifo_mem.v
 asynch_fifo_tb.v
 
    

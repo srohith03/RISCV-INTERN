@@ -1,4 +1,13 @@
-module asynch_fifo (
+
+
+module asynch_fifo # (
+
+    parameter DSIZE = 8,
+    parameter ASIZE = 4,
+    localparam DW = DSIZE,
+    localparam AW = ASIZE
+)
+(
     input i_wclk,
     input i_wrst_n,
     input i_wr,
@@ -10,10 +19,8 @@ module asynch_fifo (
     output reg [DSIZE-1:0] o_rdata,
     output wire o_rempty
 );
-    parameter DSIZE = 8;
-    parameter ASIZE = 3;
-    localparam DW = DSIZE;
-    localparam AW = ASIZE;
+    
+
 
     wire [AW-1:0] waddr, raddr;
     wire wfull_next, rempty_next;
@@ -22,14 +29,14 @@ module asynch_fifo (
     wire [AW:0] wgraynext, wbinnext;
     wire [AW:0] rgraynext, rbinnext;
 
-    reg [DW-1:0] mem[0:((1<<AW)-1)];
+    // reg [DW-1:0] mem[0:((1<<AW)-1)];
 
 
 
 
-    initial {wq2_rgray, wq1_rgray} = 0;
-    always @(posedge i_wclk or negedge i_wrst_n)
-        if (!i_wrst_n) {wq2_rgray, wq1_rgray} <= 0;
+    // initial {wq2_rgray, wq1_rgray} = 0;
+    always @(posedge i_wclk or posedge i_wrst_n)
+        if (i_wrst_n) {wq2_rgray, wq1_rgray} <= 0;
         else {wq2_rgray, wq1_rgray} <= {wq1_rgray, rgray};
 
 
@@ -41,18 +48,18 @@ module asynch_fifo (
     assign waddr = wbin[AW-1:0];
 
 
-    initial {wbin, wgray} = 0;
-    always @(posedge i_wclk or negedge i_wrst_n)
-        if (!i_wrst_n) {wbin, wgray} <= 0;
+    // initial {wbin, wgray} = 0;
+    always @(posedge i_wclk or posedge i_wrst_n)
+        if (i_wrst_n) {wbin, wgray} <= 0;
         else {wbin, wgray} <= {wbinnext, wgraynext};
 
     assign wfull_next = (wgraynext == {~wq2_rgray[AW:AW-1], wq2_rgray[AW-2:0]});
 
 
 
-    initial o_wfull = 0;
-    always @(posedge i_wclk or negedge i_wrst_n)
-        if (!i_wrst_n) o_wfull <= 1'b0;
+    // initial o_wfull = 0;
+    always @(posedge i_wclk or posedge i_wrst_n)
+        if (i_wrst_n) o_wfull <= 1'b0;
         else o_wfull <= wfull_next;
 
 
@@ -61,9 +68,9 @@ module asynch_fifo (
     
 
 
-    initial {rq2_wgray, rq1_wgray} = 0;
-    always @(posedge i_rclk or negedge i_rrst_n)
-        if (!i_rrst_n) {rq2_wgray, rq1_wgray} <= 0;
+    // initial {rq2_wgray, rq1_wgray} = 0;
+    always @(posedge i_rclk or posedge i_rrst_n)
+        if (i_rrst_n) {rq2_wgray, rq1_wgray} <= 0;
         else {rq2_wgray, rq1_wgray} <= {rq1_wgray, wgray};
 
 
@@ -73,9 +80,9 @@ module asynch_fifo (
     assign rgraynext = (rbinnext >> 1) ^ rbinnext;
 
 
-    initial {rbin, rgray} = 0;
-    always @(posedge i_rclk or negedge i_rrst_n)
-        if (!i_rrst_n) {rbin, rgray} <= 0;
+    // initial {rbin, rgray} = 0;
+    always @(posedge i_rclk or posedge i_rrst_n)
+        if (i_rrst_n) {rbin, rgray} <= 0;
         else {rbin, rgray} <= {rbinnext, rgraynext};
 
 
@@ -85,16 +92,16 @@ module asynch_fifo (
 
     assign rempty_next = (rgraynext == rq2_wgray);
 
-    initial o_rempty = 1;
-    always @(posedge i_rclk or negedge i_rrst_n)
-        if (!i_rrst_n) o_rempty <= 1'b1;
+    // initial o_rempty = 1;
+    always @(posedge i_rclk or posedge i_rrst_n)
+        if (i_rrst_n) o_rempty <= 1'b1;
         else o_rempty <= rempty_next;
 
 
     // assign o_rdata = mem[raddr];
 
 
-    dpram dp(
+    fifomem mem(
 
     .wr_addr(waddr),
     .wr_data(i_wdata),
@@ -102,13 +109,23 @@ module asynch_fifo (
     .rd_addr(raddr),
     .rd_data(o_rdata),
     .rd_en(i_rd),
-    .o_wfull(o_wfull),
-    .o_rempty(o_rempty),
     .wclk(i_wclk),
-    .rclk(i_rclk)
-
+    .rclk(i_rclk),
+    .o_wfull(o_wfull),
+    .o_rempty(o_rempty)
 );
 
 endmodule
+
+
+
+
+
+
+
+
+
+
+
 
 

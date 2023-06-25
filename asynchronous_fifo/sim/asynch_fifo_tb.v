@@ -1,9 +1,11 @@
- parameter DSIZE = 8;
- parameter ASIZE = 3;
+module top # (
 
-
-
-module top(
+    parameter DSIZE = 8,
+    parameter ASIZE = 4,
+    localparam DW = DSIZE,
+    localparam AW = ASIZE
+)
+(
     input i_wclk,
     input i_rclk,
     input rstn
@@ -68,10 +70,10 @@ module top(
        
 
         for (int iter = 0; iter < 2; iter++) begin
-            for (int i = 0; i < 32; i++) begin
+            for (int i = 0; i < 8; i++) begin
                 @(posedge i_rclk)
                 if (!o_rempty) begin
-                    i_rd = (i % 2 == 0) ? 1'b1 : 1'b0;
+                    i_rd = (i % 6 == 0) ? 1'b1 : 1'b0;
                     if (i_rd) begin
                         verif_i_wdata = verif_data_q.pop_back();
                         // Check the rdata against modeled wdata
