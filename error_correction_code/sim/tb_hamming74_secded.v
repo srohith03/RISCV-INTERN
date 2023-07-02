@@ -7,7 +7,7 @@ module top ();
     wire o_2bit_error;
     wire o_parity_error;
 
-    integer i;
+    reg unsigned i;
 
     hamming_secded SECDED (
         .i_secded      (i_secded),
@@ -23,7 +23,7 @@ module top ();
         for (i = 0; i < 16; i = i + 1) begin
             i_secded = i[3:0];
             i_noise  = 0;
-            #10;
+            #1;
         end
 
 
