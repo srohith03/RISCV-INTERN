@@ -46,8 +46,7 @@ int main(int argc, char** argv, char** env) {
     Vtop* top = new Vtop;  // Or use a const unique_ptr, or the VL_UNIQUE_PTR wrapper
 
     // Set some inputs
-    
-    
+   
 //     top->in_small = 1;
 //     top->in_quad = 0x1234;
 //     top->in_wide[0] = 0x11111111;
@@ -57,21 +56,7 @@ int main(int argc, char** argv, char** env) {
     top->eval();
     main_time++;  // Time passes...
 
-    
-
-    top->eval();
-    main_time++;  // Time passes...
-
-    
-
-    top->eval();
-    main_time++;  // Time passes...
-
-    
-
-    top->eval();
-    main_time++;  // Time passes...
-
+   
     // Simulate until $finish
     while (!Verilated::gotFinish()) {
         main_time++;  // Time passes...
@@ -122,3 +107,4 @@ int main(int argc, char** argv, char** env) {
     // Fin
     exit(0);
 }
+

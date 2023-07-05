@@ -1,44 +1,56 @@
-module hamming_secded (
-    input  [3:0] i_secded,
-    input  [4:0] i_noise,
-    output [3:0] o_secded,
-    output       o_1bit_error,
-    output       o_2bit_error,
-    output       o_parity_error
+module hamming_secded #(
+
+    parameter K = 8,
+    parameter m = calculate_m(K),
+    parameter n = m + K
+) (
+    input  [K-1:0] i_secded,
+    output [K-1:0] o_secded,
+    output         o_1bit_error,
+    output         o_2bit_error,
+    output         sb_fix_o 
 );
 
 
-    wire [6:0] enc_hamming_code;
-    wire enc_parity;
+    function integer calculate_m;
+        input integer k;
 
-    wire [6:0] o_noise_hamming_code;
-    wire o_noise_parity;
+        integer m;
+        begin
+            m = 1;
+            while (2 ** m < m + k + 1) m++;
+
+            calculate_m = m;
+        end
+    endfunction
+
+
+
+    wire [n:0] enc_hamming_code;
+    wire [m:1] p_o;
+    wire p0_o;
 
 
 
 
 
-    hamming74_enc ENC (
-        .i_data        (i_secded),
-        .o_hamming_code(enc_hamming_code),
-        .o_parity      (enc_parity)
+
+    hamming_enc ENC (
+        .d_i (i_secded),
+        .q_o (enc_hamming_code),
+        .p_o (p_o),
+        .p0_o(p0_o)
     );
 
+    wire [m:0] syndrome_o;
 
-    noise_add NOISE (
-        .i_data ({enc_parity, enc_hamming_code}),
-        .i_noise(i_noise),
-        .o_data ({o_noise_parity, o_noise_hamming_code})
-    );
-
-
-    hamming74_dec DEC (
-        .i_data        (o_noise_hamming_code),
-        .i_parity      (o_noise_parity),
-        .o_data        (o_secded),
-        .o_1bit_error  (o_1bit_error),
-        .o_2bit_error  (o_2bit_error),
-        .o_parity_error(o_parity_error)
+    hamming_dec DEC (
+        .d_i       (enc_hamming_code),
+        .q_o       (o_secded),
+        .sb_err_o  (o_1bit_error),
+        .db_err_o  (o_2bit_error),
+        .sb_fix_o  (sb_fix_o),
+        .syndrome_o(syndrome_o)
     );
 
 
