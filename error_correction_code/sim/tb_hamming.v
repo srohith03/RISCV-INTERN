@@ -50,19 +50,13 @@ endfunction //calculate_m
 
 
     initial begin
-        for (i = 0; i < 16; i = i + 1) begin
-            i_secded = i[3:0];
+        #10;
         
+        for (i = 0; i < 16; i = i + 1) begin
+            i_secded = i;
             #1;
         end
-
-
-        #10;
-
-        for (i = 0; i <= 16; i = i + 1) begin
-            i_secded = i[3:0];
-            
-        end
+        
         $finish;
     end
 endmodule

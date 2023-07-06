@@ -42,10 +42,28 @@ module hamming_secded #(
         .p0_o(p0_o)
     );
 
+
+
+    reg [n:0] noisy_hamming_code;
+    reg [($clog2(n+1))-1:0] error_index; 
+    
+    always @(enc_hamming_code) begin
+        error_index = $random % (n + 1);
+        if (error_index != 0) begin
+            if (enc_hamming_code[error_index] == 1'b1)
+                noisy_hamming_code = enc_hamming_code;
+            else
+                noisy_hamming_code = enc_hamming_code ^ (1 << error_index);
+        end
+    end
+
+
+
+
     wire [m:0] syndrome_o;
 
     hamming_dec DEC (
-        .d_i       (enc_hamming_code),
+        .d_i       (noisy_hamming_code),
         .q_o       (o_secded),
         .sb_err_o  (o_1bit_error),
         .db_err_o  (o_2bit_error),

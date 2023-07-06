@@ -56,7 +56,7 @@ VERILATOR_FLAGS += --trace
 # Generate coverage analysis
 # VERILATOR_FLAGS += --coverage
 # Run Verilator in debug mode
-VERILATOR_FLAGS += --debug
+#VERILATOR_FLAGS += --debug
 # Add this trace to get a backtrace in gdb
 #VERILATOR_FLAGS += --gdbbt
 
