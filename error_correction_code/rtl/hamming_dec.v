@@ -1,5 +1,5 @@
 module hamming_dec #(
-    parameter K       = 8,
+    parameter K       = 4,
     
 
 
@@ -36,6 +36,8 @@ module hamming_dec #(
         end
     endfunction
 
+//this function calculates the syndrome
+// for ex if syndrome = 011, this indicates that error is  located at index=3.(for k=4,m=3)
 
     function [m:1] calculate_syndrome;
         input [n:0] cw;
@@ -52,6 +54,7 @@ module hamming_dec #(
         end
     endfunction
 
+//This functions corrects the codeword by flipping the bit which is located at syndrome index
 
     function [n:0] correct_codeword;
         input [n:0] cw;
@@ -65,6 +68,7 @@ module hamming_dec #(
         end
     endfunction
 
+//This function extracts the k bit data from the codeword
 
     function [K-1:0] extract_q;
         input [n:0] cw;
@@ -82,7 +86,7 @@ module hamming_dec #(
         end
     endfunction
 
-
+//if information_error =1,then there is error in the k bit data, or else the error is in parity bits.
     function information_error;
         input [m:1] syndrome;
 
@@ -139,7 +143,7 @@ module hamming_dec #(
   
 
 
-    assign cw_fixed = correct_codeword(d_reg, syndrome_reg);
+    assign cw_fixed = correct_codeword(d_reg, syndrome_reg); //fining the codeword
 
 
     assign q = extract_q(cw_fixed);

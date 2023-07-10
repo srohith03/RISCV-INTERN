@@ -1,6 +1,6 @@
 module top #(
 
-     parameter K         = 8,
+     parameter K         = 4,
     parameter m = calculate_m(K),
     parameter n = m + K
 );
