@@ -1,0 +1,5 @@
+This code takes k bit data as input ,through hamming code encoder module the parity/redundant bits are added to it and the output from this module is named enc_hamming_code.
+
+Some kind of noise is added to test the code,  after adding the noise to enc_hamming_code ,it is named as noisy_hamming_code.
+This noisy_hamming_code is sent to the hamming code Decoder module,which takes it as input and extracts the k bit data output.
+--it fixes if there is a single bit error in the input,detects but cannot fix when there are double bit errors in the input.
